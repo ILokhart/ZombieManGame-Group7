@@ -6,5 +6,7 @@ public class testClassZMG
 	{
 		System.out.println("ZOMBIES!!!");
 	}
+	
+	//Test check
 
 }
