@@ -1,4 +1,0 @@
-monsterName
-clue
-description
-chanceToHit

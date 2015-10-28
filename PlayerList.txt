@@ -1,3 +1,0 @@
-playerName1
-playerName2
-playerName3

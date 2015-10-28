@@ -7,6 +7,7 @@ public class Game
 
 	Room currentRoom;
 	ArrayList<Room> roomList;
+	int test = 0;
 	
 	public void newGame()
 	{
