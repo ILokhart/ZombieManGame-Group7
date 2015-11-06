@@ -2,3 +2,21 @@ monsterName
 clue
 description
 chanceToHit
+
+Pharmacist 
+Provides the Vaccine color
+ds 
+ps 
+
+Pathologist 
+provides the confirmation of cure called the vaccine and origin story
+ds 
+ps 
+
+Wrestler 
+
+Survivalist 
+
+Evil Scientist 
+
+
