@@ -143,7 +143,7 @@ public class Game
 			pw.close();
 			
 			//Create a new player object with userName
-			player = new Player(userName);
+			//player = new Player(userName);
 
 			passMainMenu = true;
 		}
@@ -155,6 +155,10 @@ public class Game
 		{
 			System.out.println("ERROR: Something went wrong (fr.close)");
 		}
+		
+		//rl = new RoomList();
+		//pl = new PuzzleList();
+		//ml = new MonsterList();
 	}
 
 	/** 
