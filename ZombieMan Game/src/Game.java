@@ -39,8 +39,16 @@ public class Game
 	public void startMainMenu()
 	{
 		//Game title and introduction
-		System.out.println("Welcome ZOMBIEMAN!");
-		
+		System.out.println("▒███████▒ ▒█████   ███▄ ▄███▓ ▄▄▄▄    ██▓▓█████  ███▄ ▄███▓ ▄▄▄       ███▄    █ ");
+		System.out.println("▒ ▒ ▒ ▄▀░▒██▒  ██▒▓██▒▀█▀ ██▒▓█████▄ ▓██▒▓█   ▀ ▓██▒▀█▀ ██▒▒████▄     ██ ▀█   █ ");
+		System.out.println("░ ▒ ▄▀▒░ ▒██░  ██▒▓██    ▓██░▒██▒ ▄██▒██▒▒███   ▓██    ▓██░▒██  ▀█▄  ▓██  ▀█ ██▒");
+		System.out.println("  ▄▀▒   ░▒██   ██░▒██    ▒██ ▒██░█▀  ░██░▒▓█  ▄ ▒██    ▒██ ░██▄▄▄▄██ ▓██▒  ▐▌██▒");
+		System.out.println("▒███████▒░ ████▓▒░▒██▒   ░██▒░▓█  ▀█▓░██░░▒████▒▒██▒   ░██▒ ▓█   ▓██▒▒██░   ▓██░");
+		System.out.println("░▒▒ ▓░▒░▒░ ▒░▒░▒░ ░ ▒░   ░  ░░▒▓███▀▒░▓  ░░ ▒░ ░░ ▒░   ░  ░ ▒▒   ▓▒█░░ ▒░   ▒ ▒ ");
+		System.out.println("░░▒ ▒ ░ ▒  ░ ▒ ▒░ ░  ░      ░▒░▒   ░  ▒ ░ ░ ░  ░░  ░      ░  ▒   ▒▒ ░░ ░░   ░ ▒░");
+		System.out.println("░ ░ ░ ░ ░░ ░ ░ ▒  ░      ░    ░    ░  ▒ ░   ░   ░      ░     ░   ▒      ░   ░ ░ ");
+		System.out.println("  ░ ░        ░ ░         ░    ░       ░     ░  ░       ░         ░  ░         ░ ");
+		System.out.println("░                                  ░                                            ");
 		//Main menu is kept in a loop until a new game is created or a saved game is loaded
 		while (!passMainMenu)
 		{
@@ -142,7 +150,7 @@ public class Game
 			pw.print(userString);
 			pw.close();
 			
-			//Create a new player object with userName
+			//TODO Create a new player object with userName
 			//player = new Player(userName);
 
 			passMainMenu = true;
@@ -156,6 +164,7 @@ public class Game
 			System.out.println("ERROR: Something went wrong (fr.close)");
 		}
 		
+		//TODO finish the following for testing
 		//rl = new RoomList();
 		//pl = new PuzzleList();
 		//ml = new MonsterList();
@@ -169,7 +178,7 @@ public class Game
 	 */
 	public void loadState()
 	{
-
+		
 	}
 
 	/** 
