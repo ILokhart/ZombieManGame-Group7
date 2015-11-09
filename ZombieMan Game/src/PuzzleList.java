@@ -2,6 +2,22 @@ package src;
 
 import java.util.ArrayList;
 
+/**
+ * Class: PuzzleList
+ * 
+ * @author Bhavan Patel 
+ * @version 1.0 
+ * Course : ITEC 3860 Fall 2015
+ * Written: Nov 7, 2015
+ *  
+ *      This class is the puzzle list class which stored the question list, available correct answers
+ *      for the each of the Puzzles List's Questions and they correct answer as well. Which is stored
+ *      into Array List for the each of the attributes. 
+ * 
+ *      Purpose: 
+ * 
+ */
+
 public class PuzzleList
 {
 
@@ -9,7 +25,7 @@ public class PuzzleList
 	private ArrayList<String> questionList; 
 	private ArrayList<String> answer1; 
 	private ArrayList<String> answer2; 
-	private ArrayList<String>answer3; 
+	private ArrayList<String> answer3; 
 	private ArrayList<Integer> correctAnswer; 
 	
 	public PuzzleList() 
@@ -60,37 +76,35 @@ public class PuzzleList
 		answer2.add("question 2 answer");
 		answer3.add("question 3 answer");
 		correctAnswer.add(2);
-		
 	}	
 	
 	
 	 
-    public String getnumberofquestion(int questionNumber)
+    public int getNumberOfQuestion()
    {
-    return questionList.get ( numberofquestion );
+    return questionList.size();
    }	
    
-    public String getquestionList() 
+//    public String getQuestionList(int num) 
+//    {
+//	   return questionList.get; 
+//    }
+    public String getAnswer1(int num)
     {
-	   return questionList; 
+    	return answer1.get(num);
     }
    
-    public String getanswer1 (String answer1)
+    public String getAnswer2(int num)
     {
-	    return answer1.get (answer1);
+    	return answer2.get(num);
     }
    
-    public String getanswer2 ()
+    public String getAnswer3(int num)
     {
-	    return answer2; 
+    	return answer3.get(num);
     }
    
-    public String getanswer3 ()
-    {
-	    return answer3; 
-    }
-   
-    public int correctAnswer ()
+    public int correctAnswer (int correctAnswer)
     {  
     	return correctAnswer;
     }
