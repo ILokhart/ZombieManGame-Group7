@@ -25,8 +25,9 @@ public class Game
 	private final String PLAYERLIST = "PlayerList.txt";
 	private Player player;
 	private Room currentRoom;
-	private ArrayList<Room> roomList;
+	private MonsterList mL;
 	private PuzzleList pL;
+	private RoomList rl;
 	private boolean passMainMenu = false;
 
 	/** 
@@ -154,10 +155,6 @@ public class Game
 		{
 			System.out.println("ERROR: Something went wrong (fr.close)");
 		}
-		
-		//TODO Fill the RoomList
-		//TODO Fill the MonsterList
-		//TODO Fill the PuzzleList
 	}
 
 	/** 
