@@ -1,36 +1,75 @@
-package src;
 
+
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * @author Jonathan Mayran
  *
  */
-public class Player
+public class Player implements Serializable
 {
 	private String name;
-	private static int minusLives;
-	private static int playerHP;
-	private final int baseCTH = 30;
-	private Inventory playerInventory;
-	private int playerCTH = baseCTH + (playerInventory.getSolvedPuzzles() * 10);
+	private int lives;
+	private int hitPoints;
+	private final int BASE_CTH = 30;
+	private Inventory inventory;
 	
-	
-	public String setName()
+	public Player(String name)
 	{
-		return name;
+		this.name = name;
+		lives = 3;
+		hitPoints = 0;
+		inventory = new Inventory();
 	}
 	
-	public int setMinusLives()
+	public void setName(String name)
 	{
-		return minusLives--;
+		this.name = name;
 	}
 	
-	public int setPlayerHP()
+	public String getName()
 	{
-		return playerHP++;
+		return this.name;
 	}
 	
-
-
+	public void minusLife()
+	{
+		if(this.lives > 0)
+		{
+			lives -= 1;
+		}
+		else
+		{
+			System.out.println("You are dead! Game over.");
+		}
+	}
+	
+	public int getLives()
+	{
+		return this.lives;
+	}
+	
+	public void plusHitPoints()
+	{
+		this.hitPoints += 1;
+	}
+	
+	public void resetHitPoints()
+	{
+		this.hitPoints = 0;
+	}
+	
+	public int getCTH()
+	{
+		int calculatedCTH = BASE_CTH + (inventory.getSolvedPuzzles() * 10);
+		return calculatedCTH;
+	}
+	
+	public Inventory getInventory()
+	{
+		return inventory;
+	}
+	
 }
