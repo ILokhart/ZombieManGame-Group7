@@ -27,44 +27,16 @@ public class Monster
 	private int hitPoints;
 
 
-public Monster( String monsterName, String clue, String string, int i, int j )
+public Monster( String monsterName, String clue, String description, int chanceToHit )
 {
 		   
-		             setHitPoints(0); 
+		   this.monsterName = monsterName; 
+		   this.clue = clue;
+		   this.description = description;
+		   this.chanceToHit = chanceToHit; 
+		   this.hitPoints = 0;
 
 }
-//
-//     monsterName.add("Pharmacist");
-//     clue.add (" Provides the Vaccine color");
-//     description.add ("monster's des"); 
-//     chanceToHit.add ("24");
-//     hitPoints.add ("52");
-//     
-//     monsterName.add("Pathologist");
-//     clue.add ("provides the confirmation of cure called the vaccine and origin story");
-//     description.add ("monster's des"); 
-//     chanceToHit.add ("14");
-//     hitPoints.add ("28");
-//     
-//     monsterName.add("Wrestler");
-//     clue.add ("today");
-//     description.add ("monster's des"); 
-//     chanceToHit.add ("12");
-//     hitPoints.add ("29");
-//     
-//     monsterName.add("Survivalist");
-//     clue.add (" 24 h today");
-//     description.add ("monster's des"); 
-//     chanceToHit.add ("4");
-//     hitPoints.add ("10");
-//     
-//     monsterName.add("Evil Scientist ");
-//     clue.add ("14 today");
-//     description.add ("monster's des"); 
-//     chanceToHit.add ("4");
-//     hitPoints.add ("25");
-//}
-//     
 
    
    public String description()
