@@ -23,11 +23,11 @@ public class Monster
 	private String monsterName;
 	private String clue; 
 	private String description; 
-	private double chanceToHit; 
+	private int chanceToHit; 
 	private int hitPoints;
 
 
-public Monster( String monsterName, String clue, String description, double chanceToHit )
+public Monster( String monsterName, String clue, String string, int i, int j )
 {
 		   
 		             setHitPoints(0); 
@@ -72,7 +72,7 @@ public Monster( String monsterName, String clue, String description, double chan
 	   return description; 
    }
    
-   public double chanceToHit()
+   public int chanceToHit()
    { 
 	   return chanceToHit;
    }
