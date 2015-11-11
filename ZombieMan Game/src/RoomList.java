@@ -2,6 +2,23 @@ package src;
 
 import java.util.ArrayList;
 
+/**
+ * Class: RoomList
+ * 
+ * @author Bhavan Patel and Jacob Piazza 
+ * @version 1.0 
+ * Course : ITEC 3860 Fall 2015
+ * Written: Nov 11, 2015
+ *  
+ *      This class is the Room  class which stored the question list, available correct answers
+ *      for the each of the Room List's Questions and they correct answer as well. Which is stored
+ *      into Array List for the each of the attributes. 
+ * 
+ *      Purpose: 
+ * 
+ */
+
+
 public class RoomList
 {
 	private ArrayList<Room> rL; 
