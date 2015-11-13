@@ -1,4 +1,4 @@
-
+package src;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,7 +57,7 @@ public class Game
 		System.out.println("░▒▒ ▓░▒░▒░ ▒░▒░▒░ ░ ▒░   ░  ░░▒▓███▀▒░▓  ░░ ▒░ ░░ ▒░   ░  ░ ▒▒   ▓▒█░░ ▒░   ▒ ▒ ");
 		System.out.println("░░▒ ▒ ░ ▒  ░ ▒ ▒░ ░  ░      ░▒░▒   ░  ▒ ░ ░ ░  ░░  ░      ░  ▒   ▒▒ ░░ ░░   ░ ▒░");
 		System.out.println("░ ░ ░ ░ ░░ ░ ░ ▒  ░      ░    ░    ░  ▒ ░   ░   ░      ░     ░   ▒      ░   ░ ░ ");
-		System.out.println("  ░ ░        ░ ░    1     ░    ░       ░     ░  ░       ░         ░  ░         ░ ");
+		System.out.println("  ░ ░        ░ ░         ░    ░       ░     ░  ░       ░         ░  ░         ░ ");
 		System.out.println("░                                  ░                                            ");
 
 		// Main menu is kept in a loop until a new game (Player) is created or a

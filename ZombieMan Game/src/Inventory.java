@@ -1,4 +1,4 @@
-
+package src;
 
 
 import java.io.Serializable;
@@ -34,13 +34,14 @@ public class Inventory implements Serializable
 		clueList.add(clue);
 	}
 	
+	public String getClue(int clueNum)
+	{
+		return clueList.get(clueNum);
+	}
+	
 	public int getClueListSize()
 	{
 		return clueList.size();
 	}
 	
-	public String getClue(int clueNum)
-	{
-		return clueList.get(clueNum);
-	}
 }
