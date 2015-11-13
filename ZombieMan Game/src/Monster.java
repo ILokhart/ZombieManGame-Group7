@@ -10,11 +10,13 @@ import java.util.ArrayList;
  * Course : ITEC 3860 Fall 2015
  * Written: Nov 7, 2015
  *  
- *      This class is the Monster list class which stored the question list, available correct answers
- *      for the each of the Monster List's Questions and they correct answer as well. Which is stored
- *      into Array List for the each of the attributes. 
+ *      This class is the Monster Class which stored the monster's general information in order
+ *      to add Array List of the monster for the game. There are five constructor are used monsterName
+ *      clue, description, ChanceToHit, and hitPoints. Also, each private method their return value as getter
+ *      are created. 
+ *       
  * 
- *      Purpose: 
+ *      
  * 
  */
 

@@ -11,11 +11,10 @@ import java.util.ArrayList;
  * Course : ITEC 3860 Fall 2015
  * Written: Nov 7, 2015
  *  
- *      This class is the puzzle list class which stored the question list, available correct answers
- *      for the each of the Puzzles List's Questions and they correct answer as well. Which is stored
- *      into Array List for the each of the attributes. 
- * 
- *      Purpose: 
+ *      This class is the Monster list class which stored the Array List of the monster, 
+ *      Which creates the new monster Which is stored into Array List by using constructor methord
+ *      from the Monster.java class.
+ *      
  * 
  */
 
@@ -33,8 +32,12 @@ public class MonsterList
 		  mL.add(new Monster("Wrestler", "today", "monster's des", 12));
 		  mL.add(new Monster("Survivalist", " 24 h today", "monster's des", 32));
 		  mL.add( new Monster("Evil Scientist", " 14 today", "monster's des", 21));
+		  mL.add(new Monster("Manager", "gives directions", "primarily at work", 24));
+		  mL.add(new Monster("Noisy Neighbor", "helps player", "primarily at Home", 28));
+		  mL.add(new Monster("Doctor","gives dirctions how to get vaccine", "founded at begaining of the game", 29));
 	}
 	
+	// this method returns monster Array List by Monster Name 
 	public Monster getMonster(String name)
 	{
 		for (int i = 0; i < mL.size() - 1; i++) 

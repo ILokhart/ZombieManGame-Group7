@@ -10,11 +10,10 @@ import java.util.ArrayList;
  * Course : ITEC 3860 Fall 2015
  * Written: Nov 11, 2015
  *  
- *      This class is the Room  class which stored the question list, available correct answers
- *      for the each of the Room List's Questions and they correct answer as well. Which is stored
- *      into Array List for the each of the attributes. 
- * 
- *      Purpose: 
+ *      This class is the Room Class which stored the Room's general information in order
+ *      to add Array List of the monster for the game. There are five constructor are used roomName
+ *      description, nextRoom, previousRoom, and encounterChances. Also, each private method their return value as getter
+ *      are created.
  * 
  */
 
