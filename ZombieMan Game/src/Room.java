@@ -1,4 +1,4 @@
-package src;
+
 
 import java.util.ArrayList;
 
@@ -10,58 +10,69 @@ import java.util.ArrayList;
  * Course : ITEC 3860 Fall 2015
  * Written: Nov 11, 2015
  *  
- *      This class is the Room Class which stored the Room's general information in order
- *      to add Array List of the monster for the game. There are five constructor are used roomName
- *      description, nextRoom, previousRoom, and encounterChances. Also, each private method their return value as getter
- *      are created.
+ *      This class is the Room  class which stored the question list, available correct answers
+ *      for the each of the Room List's Questions and they correct answer as well. Which is stored
+ *      into Array List for the each of the attributes. 
+ * 
+ *      Purpose: 
  * 
  */
 
 public class Room
 {
-	private String roomName;
+	private String name;
 	private String description; 
-	private  ArrayList<String> nextRoom; 
+	private ArrayList<String> nextRoom; 
 	private String previousRoom; 
-	private int encounterChances; 
+	private int encounterChance;
+	private String localMonster;
+	private String emptyRoom;
 
-
-  public Room (String roomName, String description,  ArrayList<String> nextRoom, String previousRoom, int encounterChances  )
+  public Room (String name, String description,  ArrayList<String> nextRoom, String previousRoom, int encounterChance, String localMonster, String emptyRoom)
   {
-	 this.roomName = roomName; 
+	 this.name = name; 
 	 this.description = description; 
 	 this.nextRoom = nextRoom; 
 	 this.previousRoom = previousRoom; 
-	 this.encounterChances = encounterChances;
+	 this.encounterChance = encounterChance;
+	 this.localMonster = localMonster;
+	 this.emptyRoom = emptyRoom;
   }
   
-  public String getroomName() 
+  public String getName() 
   {
-	  return roomName;
+	  return this.name;
   }
   
-  public String getdescription()
+  public String getDescription()
   {
-	  return description;
+	  return this.description;
   }
   
-  public ArrayList<String> getnextRoom ()
+  public ArrayList<String> getNextRoom()
   {
-	  return nextRoom;
+	  return this.nextRoom;
   }
   
-  public String getpreviousRoom()
+  public String getPreviousRoom()
   {
-	  return previousRoom;
+	  return this.previousRoom;
   }
    
-  public int getencounterChances()
+  public int getEncounterChance()
   {
-	  return encounterChances;
+	  return this.encounterChance;
   }
-
-
-
+  
+  public String getLocalMonster()
+  {
+	  return this.localMonster;
+  }
+  
+  public String getEmptyRoom()
+  {
+	  return this.emptyRoom;
+  }
 }
 
 

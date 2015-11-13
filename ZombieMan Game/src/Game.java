@@ -1,5 +1,6 @@
-package src;
 
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -20,9 +21,9 @@ import java.util.Scanner;
  * Course : ITEC 3150 Fall 2015
  * Written: Nov 4, 2015
  *  
- *      This class ...  
+ *      This class will control the game flow and manage user profiles
  * 
- *      Purpose:
+ *      Purpose: To bring together all game objects and conduct game activity
  * 
  */
 public class Game
@@ -32,13 +33,15 @@ public class Game
 	private Room currentRoom;
 	private MonsterList mL;
 	private PuzzleList pL;
-	private RoomList rl;
+	private RoomList rL;
 	private boolean passMainMenu = false;
 
 	/** 
 	 * Method: startMainMenu
-	 * <description>
-	 * Note:
+	 * Game begins with the main menu. Main menu is passed once a Player object is created or loaded
+	 * Note: .java file is UFT-8 encoded to preserve logo art. If encoding is lost and the
+	 *    logo art is distorted, revert to the original save or find alternate art from
+	 *    "http://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20"
 	 *  
 	 */
 	public void startMainMenu()
@@ -54,17 +57,33 @@ public class Game
 		System.out.println("░▒▒ ▓░▒░▒░ ▒░▒░▒░ ░ ▒░   ░  ░░▒▓███▀▒░▓  ░░ ▒░ ░░ ▒░   ░  ░ ▒▒   ▓▒█░░ ▒░   ▒ ▒ ");
 		System.out.println("░░▒ ▒ ░ ▒  ░ ▒ ▒░ ░  ░      ░▒░▒   ░  ▒ ░ ░ ░  ░░  ░      ░  ▒   ▒▒ ░░ ░░   ░ ▒░");
 		System.out.println("░ ░ ░ ░ ░░ ░ ░ ▒  ░      ░    ░    ░  ▒ ░   ░   ░      ░     ░   ▒      ░   ░ ░ ");
-		System.out.println("  ░ ░        ░ ░         ░    ░       ░     ░  ░       ░         ░  ░         ░ ");
+		System.out.println("  ░ ░        ░ ░    1     ░    ░       ░     ░  ░       ░         ░  ░         ░ ");
 		System.out.println("░                                  ░                                            ");
-		// Main menu is kept in a loop until a new game is created or a saved
-		// game is loaded
+
+		// Main menu is kept in a loop until a new game (Player) is created or a
+		// saved
+		// game (Player) is loaded
 		while (!passMainMenu)
 		{
+			// Create PlayerList.txt if it doesn't exist
+			File playerListFile = new File(PLAYERLIST);
+			if (!playerListFile.exists())
+			{
+				try
+				{
+					playerListFile.createNewFile();
+				}
+				catch (IOException e)
+				{
+					System.out.println("\nERROR: Unable to create PlayerList.txt");
+				}
+			}
+
 			// Print main menu
-			System.out.println("\n\t\t\t     MAIN MENU");
-			System.out.println("\t\t\t1. Start a new game");
-			System.out.println("\t\t\t2. Load a saved game");
-			System.out.println("\t\t\t3. Exit");
+			System.out.println("\nMAIN MENU");
+			System.out.println("1. Start a new game");
+			System.out.println("2. Load a saved game");
+			System.out.println("3. Exit");
 
 			// Get menu selection from the user
 			Scanner input = new Scanner(System.in);
@@ -96,7 +115,7 @@ public class Game
 			// If 3, exit the program
 			else if (selection.equals("3"))
 			{
-				System.out.println("\n\t\t\tThank you for playing ZombieMan!");
+				System.out.println("\nThank you for playing ZombieMan!");
 				System.exit(0);
 			}
 			// If anything else, restart the main menu loop
@@ -105,12 +124,19 @@ public class Game
 				System.out.println("\nThat was not a valid selection.");
 				System.out.println("Returning to main menu.");
 			}
+
+			input.close();
 		}
+
+		// Create the remaining game Objects
+		this.rL = new RoomList();
+		this.pL = new PuzzleList();
+		this.mL = new MonsterList();
 	}
 
 	/** 
 	 * Method: newGame
-	 * <description>
+	 * New game is started from the main menu. It will create a new player.
 	 * Note:
 	 *  
 	 * @param userName
@@ -164,6 +190,7 @@ public class Game
 			// Create a new Player with userName entered
 			player = new Player(userName);
 			this.saveState();
+			
 
 			passMainMenu = true;
 		}
@@ -175,16 +202,14 @@ public class Game
 		{
 			System.out.println("ERROR: Something went wrong (fr.close)");
 		}
-
-		// TODO finish the following for testing
-		// rl = new RoomList();
-		// pl = new PuzzleList();
-		// ml = new MonsterList();
+		
+		//TODO Change start room to hospital
+		currentRoom = rL.getRoom("Test Room 1");
 	}
 
 	/** 
 	 * Method: loadState
-	 * <description>
+	 * This method is started from the main menu. It will load a user selected player from disk
 	 * Note:
 	 *  
 	 */
@@ -195,10 +220,10 @@ public class Game
 		Scanner inputScan = null;
 		Scanner userInput = null;
 		ObjectInputStream inputStream = null;
-		
+
 		// Initiate load dialog
 		System.out.println("\nWho are you? (enter a number)");
-		
+
 		// Initialize file reading objects
 		try
 		{
@@ -206,38 +231,38 @@ public class Game
 			inputScan = new Scanner(fr);
 			userInput = new Scanner(System.in);
 		}
-		catch(FileNotFoundException e)
+		catch (FileNotFoundException e)
 		{
 			System.out.println("ERROR: Unable to find player list.");
 			System.out.println("ERROR: Please ensure " + PLAYERLIST + " is in the correct location.");
 		}
-		
+
 		// Output all users available to load and temp store them in userList AL
 		ArrayList<String> userList = new ArrayList<String>();
 		int userCount = 1;
-		while(inputScan.hasNext())
+		while (inputScan.hasNext())
 		{
 			String user = inputScan.nextLine();
 			System.out.println(userCount + ". " + user);
 			userList.add(user);
 			userCount += 1;
 		}
-		
+
 		// Get user name selection
 		int selection;
 		try
 		{
-			selection = userInput.nextInt();			
+			selection = userInput.nextInt();
 		}
-		catch(InputMismatchException e)
+		catch (InputMismatchException e)
 		{
 			System.out.println("\nThat was not a valid selection.");
 			System.out.println("Returning to main menu.");
 			return;
 		}
-		
-		// Load selection from player list or return to main menu
-		if(selection <= userList.size() && selection > 0)
+
+		// Load userList selection from data file or return to main menu
+		if (selection <= userList.size() && selection > 0)
 		{
 			String userFile = userList.get(selection - 1) + ".dat";
 			try
@@ -248,7 +273,7 @@ public class Game
 				System.out.print("\tComplete!\n");
 				passMainMenu = true;
 			}
-			catch(IOException e)
+			catch (IOException e)
 			{
 				System.out.println("ERROR: There was a problem reading " + userFile + ".");
 			}
@@ -263,7 +288,7 @@ public class Game
 			System.out.println("Returning to main menu.");
 			return;
 		}
-		
+
 		// Close file reading objects
 		try
 		{
@@ -272,29 +297,29 @@ public class Game
 			userInput.close();
 			inputStream.close();
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			System.out.println("ERROR: Something went wrong while closing input objects.");
 		}
-		
+
 	}
 
 	/** 
 	 * Method: saveState
-	 * <description>
+	 * This method is called when creating a new player, when the game is exited, or at the users will
 	 * Note:
 	 *  
 	 */
 	public void saveState()
 	{
 		System.out.println("\n\tSaving . . . ");
-		
+
 		// Build userFile string based on player name
 		String userFile = player.getName() + ".dat";
-		
+
 		// Declare file writing object
 		ObjectOutputStream output = null;
-		
+
 		// Initialize file writing objects and write user data to file
 		try
 		{
@@ -302,24 +327,24 @@ public class Game
 			output.writeObject(player);
 			System.out.print("\tComplete!\n");
 		}
-		catch(FileNotFoundException e)
+		catch (FileNotFoundException e)
 		{
 			System.out.println("ERROR: Unable to access user save file.");
 			System.out.println("ERROR: Please ensure " + userFile + " file is is the correct location.");
 		}
-		catch(IOException e)
+		catch (IOException e)
 		{
 			System.out.println("ERROR: Unable to write user save file.");
 			System.out.println("ERROR: Please ensure " + userFile + " file is not being used by another program.");
 			e.printStackTrace();
 		}
-		
+
 		// Close file writing objects
 		try
 		{
 			output.close();
 		}
-		catch(IOException e)
+		catch (IOException e)
 		{
 			System.out.println("ERROR: ObjectOutputStream was never initialized.");
 		}
@@ -327,28 +352,250 @@ public class Game
 
 	/** 
 	 * Method: moveToRoom
-	 * <description>
+	 * This method is used to control navigation between rooms.
 	 * Note:
 	 *  
 	 * @param room
 	 */
-	public void moveToRoom(String room)
+	public void moveToRoom()
 	{
-		// print out rooms available to move to
-		// replace current room with selected room
-		// startEncounter
+		// Prompt for direction
+		System.out.println("\nWhich direction would you like to go?");
+		System.out.println("1. Forward");
+		System.out.println("2. Backward");
+
+		// Get direction choice from user
+		Scanner input = new Scanner(System.in);
+		String selection = input.nextLine();
+
+		// If user selects forward display next rooms and move to selection
+		if (selection.equals("1"))
+		{
+			// Check to see if there are any rooms to move forward into
+			if (currentRoom.getNextRoom().size() == 0)
+			{
+				System.out.println("\nThere doesn't seem to be anything in that direction.");
+			}
+			else
+			{
+				// If there are next rooms get the user choice for next room
+				int roomChoice;
+				System.out.println("\nChoose a location.");
+				for (int i = 0; i < currentRoom.getNextRoom().size() - 1; i++)
+				{
+					System.out.println((i + 1) + ". " + currentRoom.getNextRoom().get(i));
+				}
+
+				// Validate user input
+				try
+				{
+					roomChoice = input.nextInt();
+				}
+				catch (InputMismatchException e)
+				{
+					System.out.println("\nThat was not a valid selection.");
+					input.close();
+					return;
+				}
+
+				// Move to next room choice
+				if (roomChoice <= currentRoom.getNextRoom().size() && roomChoice > 0)
+				{
+					currentRoom = rL.getRoom(currentRoom.getNextRoom().get(roomChoice - 1));
+					// Output the current room descripion before starting an event
+					System.out.println("\nYou observe your surroundings: " + currentRoom.getDescription());
+				}
+			}
+		}
+
+		// If user selects backward move to previous room
+		else if (selection.equals("2"))
+		{
+			if (!currentRoom.getName().equals("Hospital"))
+			{
+				currentRoom = rL.getRoom(currentRoom.getPreviousRoom());
+			}
+			else
+			{
+				System.out.println("\nThere doesn't seem to be anything in that direction.");
+			}
+		}
+
+		// If user enters a non-option...
+		else
+		{
+			System.out.println("\nThat was not a valid selection.");
+		}
+
+		input.close();
 	}
 
 	/** 
 	 * Method: startEncounter
-	 * <description>
+	 * This method is called after the user navigates into a new room. It will generate a random type of encounter
 	 * Note:
 	 *  
 	 */
 	public void startEncounter()
+	{		
+		int encounterChance = (int) (Math.random() * 100);
+		// TODO Remove encounterChance SOP
+		System.out.println("\nEncounter chance roll: " + encounterChance);
+
+		if (encounterChance >= currentRoom.getEncounterChance())
+		{
+			this.solvePuzzle();
+			// TODO Complete encounter feedback
+			System.out.println("\nYou got a Puzzle.");
+		}
+		else if (encounterChance >= 80)
+		{
+			this.fightMonster();
+			// TODO Complete encounter feedback
+			System.out.println("\nYou got a Monster.");
+		}
+		else
+		{
+			System.out.println("\n" + currentRoom.getEmptyRoom());
+		}
+	}
+
+	/** 
+	 * Method: solvePuzzle
+	 * 
+	 * Note:
+	 *  
+	 */
+	public void solvePuzzle()
 	{
-		// generate encounter value
-		// based on current room encounterValues start monster/puzzle/nothing
+		// Puzzle intro
+		System.out.println("\nGlyphs appear out of thin air.");
+		System.out.println("They float in front you and begin to form a question.");
+
+		// Generate int to pull a random puzzle
+		int questionNum = (int) (Math.random() * pL.getNumberOfQuestion());
+		// TODO remove questionNum output
+		System.out.println("Generated question number: " + questionNum);
+
+		// Display question and answers
+		System.out.println("\n" + pL.getQuestion(questionNum));
+		System.out.println("1. " + pL.getAnswer1(questionNum));
+		System.out.println("2. " + pL.getAnswer2(questionNum));
+		System.out.println("3. " + pL.getAnswer3(questionNum));
+		System.out.println("\nChoose wisely: ");
+
+		// Get user choice and evaluate
+		Scanner puzzleInput = new Scanner(System.in);
+		int puzzleChoice;
+		try
+		{
+			puzzleChoice = puzzleInput.nextInt();
+		}
+		catch (InputMismatchException e)
+		{
+			puzzleChoice = -1;
+		}
+		
+		if(puzzleChoice == pL.correctAnswer(questionNum))
+		{
+			System.out.println("\nYou chose wisely.");
+			System.out.println("\nThe question begins to disolve and seeps into your flesh.");
+			System.out.println("You feel more powerful.");
+			player.getInventory().addSolvedPuzzles();
+		}
+		else if(puzzleChoice < 0 && puzzleChoice < 4)
+		{
+			System.out.println("\nYou chose poorly.");
+			System.out.println("\nThe question disolves into the air around you.");
+		}
+		else
+		{
+			System.out.println("\nYour response is unclear.");
+			System.out.println("\nThe question disolves into the air around you.");
+		}
+		puzzleInput.close();
+	}
+
+	/** 
+	 * Method: fightMonster
+	 * <description>
+	 * Note:
+	 *  
+	 */
+	public void fightMonster()
+	{
+		// Get monster associated with currentRoom and output descriptions
+		Monster monster = mL.getMonster(currentRoom.getLocalMonster());
+		//TODO chage this announcement to something legit
+		System.out.println("\nA wild " + monster.getName() + " has appeared.");
+		System.out.println(monster.getDescription());
+		
+		for (int i = 0; i < 5; i++)
+		{
+			System.out.println("\nRound " + (i + 1) + " of 5.");
+			// Generate hit value and compare
+			int mHitValue = (int)(Math.random() * 101);
+			int pHitValue = (int)(Math.random() * 101);
+			
+			// Wait x000 seconds
+			try
+			{
+				Thread.sleep(2000);
+			}
+			catch(InterruptedException e)
+			{
+			}
+			
+			// Player turn per round
+			if(pHitValue < player.getCTH())
+			{
+				System.out.println("\nYou attack the " + monster.getName() + " and HIT.");
+				player.plusHitPoints();
+			}
+			else
+			{
+				System.out.println("\nYou attack the " + monster.getName() + " and MISS.");
+			}
+			
+			// Monster turn per round
+			if(mHitValue < monster.getCTH())
+			{
+				System.out.println("\nThe " + monster.getName() + " attacks you and HITS.");
+				monster.plusHitPoints();
+			}
+			else
+			{
+				System.out.println("\nThe " + monster.getName() + " and MISSES.");
+			}
+			
+			// Wait x000 seconds
+			try
+			{
+				Thread.sleep(2000);
+			}
+			catch(InterruptedException e)
+			{
+			}
+		}
+		
+		// Evaluate fight outcome
+		if(player.getHitPoints() >= monster.getHitPoints())
+		{
+			System.out.println("\nYou have killed the " + monster.getName());
+			System.out.println("As you consume him you can feel his knowledge coursing through your veins.");
+			System.out.println("A voice in the back of your mind whispers: " + monster.getClue());
+			player.getInventory().addClue(monster.getClue());
+		}
+		else
+		{
+			System.out.println("The " + monster.getName() + " has injured you gravely and you loose 1 life.");
+			player.minusLife();
+		}
+	}
+	
+	public int getPlayerLives()
+	{
+		return this.player.getLives();
 	}
 
 	/** 
@@ -362,7 +609,19 @@ public class Game
 	{
 		Game game = new Game();
 		game.startMainMenu();
-		System.out.println("\nPerhaps we should start from the begining...\n");
+		
+		boolean gameOver = false;
+		while(!gameOver)
+		{
+			game.moveToRoom();
+			game.startEncounter();
+			if(game.getPlayerLives() == 0)
+			{
+				gameOver = true;
+			}
+		}
+		System.out.println("GAME OVER");
+		
 	}
 
 }
