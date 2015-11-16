@@ -1,5 +1,6 @@
 package src;
 
+
 import java.util.ArrayList;
 
 /**
@@ -34,7 +35,12 @@ public class PuzzleList
 	{
 		// AarrayList of the Puzzle list are added for each questions and their
 		// Possible Answers.
-
+		questionList = new ArrayList<String>();
+		answer1 = new ArrayList<String>();
+		answer2 = new ArrayList<String>();
+		answer3 = new ArrayList<String>();
+		correctAnswer = new ArrayList<Integer>();
+		
 		questionList.add("What pill did Neo get from Morpheus? ");
 		answer1.add("Red Pill");
 		answer2.add("Blue Pill");

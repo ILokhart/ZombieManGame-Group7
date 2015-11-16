@@ -1,5 +1,6 @@
 package src;
 
+
 import java.util.ArrayList;
 
 /**
@@ -26,6 +27,8 @@ public class MonsterList
 	// adds into array List
 	public MonsterList()
 	{
+		mL = new ArrayList<Monster>();
+		
 		mL.add(new Monster("ERROR Monster", "ERROR Clue", "A monster matching that name could not be found.", 100));
 		mL.add(new Monster("John Doe", "John doesn't have a clue", "Just your average blue-collar gent", 15));
 		mL.add(new Monster("Pharmacist", "Provides the Vaccine color", "monster's des", 24));
