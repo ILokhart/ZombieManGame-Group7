@@ -1,4 +1,4 @@
-
+package src;
 
 
 import java.io.Serializable;
@@ -6,6 +6,10 @@ import java.util.ArrayList;
 
 public class Inventory implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int solvedPuzzles;
 	private ArrayList<String> clueList;
 	
@@ -30,13 +34,14 @@ public class Inventory implements Serializable
 		clueList.add(clue);
 	}
 	
+	public String getClue(int clueNum)
+	{
+		return clueList.get(clueNum);
+	}
+	
 	public int getClueListSize()
 	{
 		return clueList.size();
 	}
 	
-	public String getClue(int clueNum)
-	{
-		return clueList.get(clueNum);
-	}
 }

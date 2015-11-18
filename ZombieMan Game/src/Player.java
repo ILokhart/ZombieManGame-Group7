@@ -1,7 +1,6 @@
 package src;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * @author Jonathan Mayran
@@ -9,6 +8,10 @@ import java.util.ArrayList;
  */
 public class Player implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private int lives;
 	private int hitPoints;
@@ -48,6 +51,11 @@ public class Player implements Serializable
 	public int getLives()
 	{
 		return this.lives;
+	}
+	
+	public int getHitPoints()
+	{
+		return this.hitPoints;
 	}
 	
 	public void plusHitPoints()
