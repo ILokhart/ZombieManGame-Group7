@@ -1,5 +1,6 @@
 package src;
 
+
 import java.util.ArrayList;
 
 /**
@@ -26,6 +27,11 @@ public class RoomList
 	// adds into array List
 	public RoomList()
 	{
+<<<<<<< HEAD
+=======
+		rL = new ArrayList<Room>();
+		
+>>>>>>> 938542e1f8603e67a451eec575388baa6146baba
 		ArrayList<String> nextRoom1 = new ArrayList<String>();
 		nextRoom1.add("Test Room 2");
 		rL.add(new Room("Test Room 1", "This is the first test room.", nextRoom1, "Test Room 3", 50, "John Doe", "It is quiet in Test Room 1."));

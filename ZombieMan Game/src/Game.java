@@ -1,5 +1,9 @@
 package src;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 938542e1f8603e67a451eec575388baa6146baba
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -127,11 +131,19 @@ public class Game
 
 			input.close();
 		}
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> 938542e1f8603e67a451eec575388baa6146baba
 		// Create the remaining game Objects
 		this.rL = new RoomList();
 		this.pL = new PuzzleList();
 		this.mL = new MonsterList();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 938542e1f8603e67a451eec575388baa6146baba
 	}
 
 	/** 
@@ -204,7 +216,14 @@ public class Game
 		}
 		
 		//TODO Change start room to hospital
+<<<<<<< HEAD
 		currentRoom = rL.getRoom("Test Room 1");
+=======
+		ArrayList<String> nextRoomTest = new ArrayList<String>();
+		nextRoomTest.add("Test Room Next 1");
+		nextRoomTest.add("Test Room Next 2");
+		currentRoom = new Room("Test Room 1", "TR1 Description", nextRoomTest, "TR1 Previous", 50, "Test Room Local Monster", "TR1 is empty");
+>>>>>>> 938542e1f8603e67a451eec575388baa6146baba
 	}
 
 	/** 
@@ -301,7 +320,10 @@ public class Game
 		{
 			System.out.println("ERROR: Something went wrong while closing input objects.");
 		}
+<<<<<<< HEAD
 
+=======
+>>>>>>> 938542e1f8603e67a451eec575388baa6146baba
 	}
 
 	/** 
