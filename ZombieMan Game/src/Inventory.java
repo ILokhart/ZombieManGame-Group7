@@ -1,8 +1,4 @@
 package src;
-<<<<<<< HEAD
-=======
-
->>>>>>> 938542e1f8603e67a451eec575388baa6146baba
 
 
 import java.io.Serializable;

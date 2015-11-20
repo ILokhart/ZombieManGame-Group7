@@ -1,0 +1,9 @@
+diff a/ZombieMan Game/src/MonsterList.java b/ZombieMan Game/src/MonsterList.java	(rejected hunks)
+@@ -34,6 +34,7 @@
+ 		  mL.add( new Monster("Evil Scientist", " 14 today", "monster's des", 21));
+ 		  mL.add(new Monster("Manager", "gives directions", "primarily at work", 24));
+ 		  mL.add(new Monster("Noisy Neighbor", "helps player", "primarily at Home", 28));
++		  mL.add(new Monster("Doctor","gives dirctions how to get vaccine", "founded at begaining of the game", 29));
+ 	}
+ 	
+ 	// this method returns monster Array List by Monster Name 
