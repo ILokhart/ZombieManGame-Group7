@@ -1,6 +1,7 @@
 package src;
 
 
+
 import java.io.Serializable;
 
 /**
@@ -18,6 +19,7 @@ public class Player implements Serializable
 	private int hitPoints;
 	private final int BASE_CTH = 30;
 	private Inventory inventory;
+	private Room savedRoom;
 	
 	public Player(String name)
 	{
@@ -25,6 +27,16 @@ public class Player implements Serializable
 		lives = 3;
 		hitPoints = 0;
 		inventory = new Inventory();
+	}
+	
+	public void setSavedRoom(Room currentRoom)
+	{
+		this.savedRoom = currentRoom;
+	}
+	
+	public Room getSavedRoom()
+	{
+		return this.savedRoom;
 	}
 	
 	public void setName(String name)

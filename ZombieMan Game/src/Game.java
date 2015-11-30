@@ -1,7 +1,5 @@
 package src;
 
-
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -33,12 +31,14 @@ public class Game
 	private final String PLAYERLIST = "PlayerList.txt";
 	private Player player;
 	private Room currentRoom;
-	private MonsterList mL;
-	private PuzzleList pL;
-	private RoomList rL;
+	private Monster currentMonster;
+	private MonsterList mL = new MonsterList();
+	private PuzzleList pL = new PuzzleList();
+	private RoomList rL = new RoomList();
 	private boolean passMainMenu = false;
 	private boolean gameOver = false;
-
+	private Scanner userInput = new Scanner(System.in);
+	String trashString;
 
 	/** 
 	 * Method: startMainMenu
@@ -66,8 +66,7 @@ public class Game
 		System.out.println("░                                  ░                                            ");
 
 		// Main menu is kept in a loop until a new game (Player) is created or a
-		// saved
-		// game (Player) is loaded
+		// saved game (Player) is loaded
 		while (!passMainMenu)
 		{
 			// Create PlayerList.txt if it doesn't exist
@@ -91,15 +90,14 @@ public class Game
 			System.out.println("3. Exit");
 
 			// Get menu selection from the user
-			Scanner input = new Scanner(System.in);
-			String selection = input.nextLine();
+			String selection = userInput.nextLine();
 
 			// If 1, start a new game
 			if (selection.equals("1"))
 			{
 				// Ask the user for their name
 				System.out.println("\nPlease enter your name:");
-				String userName = input.nextLine();
+				String userName = userInput.nextLine();
 				// User name validation
 				if (userName.length() > 0 && userName != null && !userName.contains(" "))
 				{
@@ -130,11 +128,6 @@ public class Game
 				System.out.println("Returning to main menu.");
 			}
 		}
-		
-		// Create the remaining game Objects
-		this.rL = new RoomList();
-		this.pL = new PuzzleList();
-		this.mL = new MonsterList();
 
 	}
 
@@ -193,8 +186,6 @@ public class Game
 
 			// Create a new Player with userName entered
 			player = new Player(userName);
-			this.saveState();
-			
 
 			passMainMenu = true;
 		}
@@ -206,14 +197,25 @@ public class Game
 		{
 			System.out.println("ERROR: Something went wrong (fr.close)");
 		}
-		
-		//TODO Change start room to hospital
-		ArrayList<String> nextRoomTest = new ArrayList<String>();
-		nextRoomTest.add("Test Room Next 1");
-		nextRoomTest.add("Test Room Next 2");
-		currentRoom = new Room("Test Room 1", "TR1 Description", nextRoomTest, "TR1 Previous", 50, "Test Room Local Monster", "TR1 is empty");
-		
-		//TODO Create intro dialog
+
+		// Starting room is set to Hospital
+		currentRoom = rL.getRoom("Hospital");
+
+		// Intro dialog
+		System.out.println("\nYou wipe your eyes and open them.");
+		System.out.println("As your vision comes into focus you are overcome with a piercing migrane that blurs your vision again.");
+		System.out.println("A sharp ringing tone lingers in your ears.");
+		System.out.println("You regain your senses and realize that you're laying in a hospital bed and your hands are covered in blood.");
+		System.out.println("You sit up and notice a doctor on the floor, wearing a blood soaked white coat, reaching desperately towards the room door.");
+		System.out.println("Some unknown, dark instinct consumes your body as you lunge onto his back and tear at his flesh...");
+
+		//TODO Fix continue
+		System.out.println("\nPress enter to continue...");
+		userInput.nextLine();
+
+		// Initiate fight with the doctor
+		this.setMonster(mL.getMonster("Doctor"));
+		this.fightMonster();
 	}
 
 	/** 
@@ -227,7 +229,6 @@ public class Game
 		// Declare file reading objects
 		FileReader fr = null;
 		Scanner inputScan = null;
-		Scanner userInput = null;
 		ObjectInputStream inputStream = null;
 
 		// Initiate load dialog
@@ -238,7 +239,6 @@ public class Game
 		{
 			fr = new FileReader(PLAYERLIST);
 			inputScan = new Scanner(fr);
-			userInput = new Scanner(System.in);
 		}
 		catch (FileNotFoundException e)
 		{
@@ -276,10 +276,12 @@ public class Game
 			String userFile = userList.get(selection - 1) + ".dat";
 			try
 			{
-				System.out.println("\n\tLoading . . . ");
+				System.out.println("\nLoading game. . . ");
 				inputStream = new ObjectInputStream(new FileInputStream(userFile));
 				this.player = (Player) inputStream.readObject();
-				System.out.print("\tComplete!\n");
+				this.currentRoom = this.player.getSavedRoom();
+				System.out.print("Done.\n");
+				System.out.println("\n" + this.currentRoom.getDescription());
 				passMainMenu = true;
 			}
 			catch (IOException e)
@@ -303,7 +305,6 @@ public class Game
 		{
 			fr.close();
 			inputScan.close();
-			userInput.close();
 			inputStream.close();
 		}
 		catch (Exception e)
@@ -320,7 +321,8 @@ public class Game
 	 */
 	public void saveState()
 	{
-		System.out.println("\n\tSaving . . . ");
+		//System.out.println("\nSaving game. . . ");
+		this.player.setSavedRoom(currentRoom);
 
 		// Build userFile string based on player name
 		String userFile = player.getName() + ".dat";
@@ -333,7 +335,7 @@ public class Game
 		{
 			output = new ObjectOutputStream(new FileOutputStream(userFile));
 			output.writeObject(player);
-			System.out.print("\tComplete!\n");
+			//System.out.print("Done.\n");
 		}
 		catch (FileNotFoundException e)
 		{
@@ -368,74 +370,88 @@ public class Game
 	public void moveToRoom()
 	{
 		// Prompt for direction
-		System.out.println("\nWhich direction would you like to go?");
-		System.out.println("1. Forward");
-		System.out.println("2. Backward");
-
-		// Get direction choice from user
-		Scanner input = new Scanner(System.in);
-		String selection = input.nextLine();
-
-		// If user selects forward display next rooms and move to selection
-		if (selection.equals("1"))
+		boolean moved = false;
+		while (!moved)
 		{
-			// Check to see if there are any rooms to move forward into
-			if (currentRoom.getNextRoom().size() == 0)
+			System.out.println("\nWhich direction would you like to go?");
+			System.out.println("FORWARD or BACKWARD?");
+
+			// Get direction choice from user
+			String selection = userInput.nextLine();
+
+			// If user selects forward display next rooms and move to selection
+			if (selection.equalsIgnoreCase("forward"))
 			{
-				System.out.println("\nThere doesn't seem to be anything in that direction.");
+				// Check to see if there are any rooms to move forward into
+				if (currentRoom.getNextRoom().size() == 0)
+				{
+					System.out.println("\nThere doesn't seem to be anything in that direction.");
+				}
+				else
+				{
+					// If there are next rooms get the user choice for next room
+					System.out.println("\nChoose a location.");
+					for (int i = 0; i < currentRoom.getNextRoom().size(); i++)
+					{
+						System.out.println((i + 1) + ". " + currentRoom.getNextRoom().get(i));
+					}
+
+					// Get user room choice and validate input
+					int roomNumber;
+					try
+					{
+						roomNumber = userInput.nextInt();
+					}
+					catch(InputMismatchException e)
+					{
+						roomNumber = -1;
+					}
+					catch (NumberFormatException e)
+					{
+						roomNumber = -1;
+					}
+
+					// Move to next room choice
+					if (roomNumber <= currentRoom.getNextRoom().size() && roomNumber > 0)
+					{
+						this.currentRoom = rL.getRoom(currentRoom.getNextRoom().get(roomNumber - 1));
+						System.out.println("\n" + currentRoom.getDescription());
+						moved = true;
+					}
+				}
 			}
+
+			// If user selects backward move to previous room
+			else if (selection.equalsIgnoreCase("backward"))
+			{
+				if (currentRoom.getPreviousRoom().length() == 0)
+				{
+					System.out.println("\nThere doesn't seem to be anything in that direction.");
+				}
+				else
+				{
+					currentRoom = rL.getRoom(currentRoom.getPreviousRoom());
+					currentMonster = mL.getMonster(currentRoom.getLocalMonster());
+					System.out.println("\n" + currentRoom.getDescription());
+					moved = true;
+				}
+			}
+			else if(selection.equalsIgnoreCase("help"))
+			{
+				System.out.println("\nYou must type FORWARD or BACKWARD to continue. EXIT to save and quit");
+			}
+			else if(selection.equalsIgnoreCase("exit"))
+			{
+				this.saveState();
+				System.exit(0);
+			}
+			// If user enters a non-option...
 			else
 			{
-				// If there are next rooms get the user choice for next room
-				int roomChoice;
-				System.out.println("\nChoose a location.");
-				for (int i = 0; i < currentRoom.getNextRoom().size() - 1; i++)
-				{
-					System.out.println((i + 1) + ". " + currentRoom.getNextRoom().get(i));
-				}
-
-				// Validate user input
-				try
-				{
-					roomChoice = input.nextInt();
-				}
-				catch (InputMismatchException e)
-				{
-					System.out.println("\nThat was not a valid selection.");
-					input.close();
-					return;
-				}
-
-				// Move to next room choice
-				if (roomChoice <= currentRoom.getNextRoom().size() && roomChoice > 0)
-				{
-					currentRoom = rL.getRoom(currentRoom.getNextRoom().get(roomChoice - 1));
-					// Output the current room descripion before starting an event
-					System.out.println("\nYou observe your surroundings: " + currentRoom.getDescription());
-				}
+				System.out.println("\nInvalid input.");
 			}
 		}
 
-		// If user selects backward move to previous room
-		else if (selection.equals("2"))
-		{
-			if (!currentRoom.getName().equals("Hospital"))
-			{
-				currentRoom = rL.getRoom(currentRoom.getPreviousRoom());
-			}
-			else
-			{
-				System.out.println("\nThere doesn't seem to be anything in that direction.");
-			}
-		}
-
-		// If user enters a non-option...
-		else
-		{
-			System.out.println("\nThat was not a valid selection.");
-		}
-
-		input.close();
 	}
 
 	/** 
@@ -445,26 +461,83 @@ public class Game
 	 *  
 	 */
 	public void startEncounter()
-	{		
+	{
+		// Generate a random encounter chance betwen 0 and 100 and apply to encounter
+		boolean initEncounter = false;
 		int encounterChance = (int) (Math.random() * 100);
-		// TODO Remove encounterChance SOP
-		System.out.println("\nEncounter chance roll: " + encounterChance);
-
-		if (encounterChance >= currentRoom.getEncounterChance())
+		System.out.println("Encounter chance: " + encounterChance);
+		if (encounterChance >= 70)
 		{
-			this.solvePuzzle();
-			// TODO Complete encounter feedback
-			System.out.println("\nYou got a Puzzle.");
+			System.out.println("\n" + currentRoom.getEmptyRoom());
 		}
-		else if (encounterChance >= 70)
+		else if (encounterChance >= currentRoom.getEncounterChance())
 		{
-			this.fightMonster();
-			// TODO Complete encounter feedback
-			System.out.println("\nYou got a Monster.");
+			// Get monster associated with currentRoom and output descriptions
+			this.setMonster(mL.getMonster(currentRoom.getLocalMonster()));
+			while(!initEncounter)
+			{
+				System.out.println("\nYou sense a nearby threat.");
+				System.out.println("FIGHT or FLEE?");
+				
+				// Determine if the user would rather fight or flee the encounter
+				String selection = userInput.next();
+				if(selection.equalsIgnoreCase("fight"))
+				{
+					initEncounter = true;
+					this.fightMonster();
+				}
+				else if(selection.equalsIgnoreCase("flee"))
+				{
+					initEncounter = true;
+					System.out.println("\nYou quietly shuffle your body into the shadows....");
+				}
+				else if(selection.equalsIgnoreCase("help"))
+				{
+					System.out.println("\nYou must type FIGHT or FLEE to continue. EXIT to save and quit.");
+				}
+				else if(selection.equalsIgnoreCase("exit"))
+				{
+					this.saveState();
+					System.exit(0);
+				}
+				else
+				{
+					System.out.println("\nInvalid input.");
+				}
+			}
 		}
 		else
 		{
-			System.out.println("\n" + currentRoom.getEmptyRoom());
+			while(!initEncounter)
+			{
+				System.out.println("\nYou sense a strange presence nearby.");
+				System.out.println("SEARCH or IGNORE?");
+				
+				// Determine if the user would rather fight or flee the encounter
+				String selection = userInput.next();
+				if(selection.equalsIgnoreCase("search"))
+				{
+					initEncounter = true;
+					this.solvePuzzle();
+				}
+				else if(selection.equalsIgnoreCase("ignore"))
+				{
+					initEncounter = true;
+					System.out.println("\nYou quietly pass through the area, eyes forward...");
+					trashString = userInput.nextLine(); //Couldn't solve carriage return in scanner buffer. This removes it seamlessly durring gameplay
+					
+				}
+				else if(selection.equalsIgnoreCase("help"))
+				{
+					System.out.println("\nYou must type SEARCH or IGNORE to continue.");
+					trashString = userInput.nextLine(); //Couldn't solve carriage return in scanner buffer. This removes it seamlessly durring gameplay
+				}
+				else
+				{
+					System.out.println("\nInvalid input.");
+					trashString = userInput.nextLine(); //Couldn't solve carriage return in scanner buffer. This removes it seamlessly durring gameplay
+				}
+			}
 		}
 	}
 
@@ -482,8 +555,6 @@ public class Game
 
 		// Generate int to pull a random puzzle
 		int questionNum = (int) (Math.random() * pL.getNumberOfQuestion());
-		// TODO remove questionNum output
-		System.out.println("Generated question number: " + questionNum);
 
 		// Display question and answers
 		System.out.println("\n" + pL.getQuestion(questionNum));
@@ -493,35 +564,44 @@ public class Game
 		System.out.println("\nChoose wisely: ");
 
 		// Get user choice and evaluate
-		Scanner puzzleInput = new Scanner(System.in);
-		int puzzleChoice;
+		trashString = userInput.nextLine(); //Couldn't solve carriage return in scanner buffer. This removes it seamlessly durring gameplay
+		int puzzleNum;
 		try
 		{
-			puzzleChoice = puzzleInput.nextInt();
+//			puzzleNum = Integer.parseInt(puzzleChoice);
+			puzzleNum = userInput.nextInt();
+
 		}
-		catch (InputMismatchException e)
+		catch(InputMismatchException e)
 		{
-			puzzleChoice = -1;
+			puzzleNum = -1;
 		}
-		
-		if(puzzleChoice == pL.correctAnswer(questionNum))
+		catch (NumberFormatException e)
+		{
+			puzzleNum = -1;
+		}
+
+		if (puzzleNum == pL.correctAnswer(questionNum))
 		{
 			System.out.println("\nYou chose wisely.");
 			System.out.println("\nThe question begins to disolve and seeps into your flesh.");
 			System.out.println("You feel more powerful.");
+			System.out.println("(chance to hit +10%)");
 			player.getInventory().addSolvedPuzzles();
+			trashString = userInput.nextLine(); //Couldn't solve carriage return in scanner buffer. This removes it seamlessly durring gameplay
 		}
-		else if(puzzleChoice < 0 && puzzleChoice < 4)
+		else if (puzzleNum > 0 && puzzleNum < 4)
 		{
 			System.out.println("\nYou chose poorly.");
-			System.out.println("\nThe question disolves into the air around you.");
+			System.out.println("The question disolves into the air around you.");
+			trashString = userInput.nextLine(); //Couldn't solve carriage return in scanner buffer. This removes it seamlessly durring gameplay
 		}
 		else
 		{
 			System.out.println("\nYour response is unclear.");
-			System.out.println("\nThe question disolves into the air around you.");
+			System.out.println("The question disolves into the air around you.");
+			trashString = userInput.nextLine(); //Couldn't solve carriage return in scanner buffer. This removes it seamlessly durring gameplay
 		}
-		puzzleInput.close();
 	}
 
 	/** 
@@ -532,87 +612,106 @@ public class Game
 	 */
 	public void fightMonster()
 	{
-		// Get monster associated with currentRoom and output descriptions
-		Monster monster = mL.getMonster(currentRoom.getLocalMonster());
-		//TODO chage this announcement to something legit
-		System.out.println("\nA wild " + monster.getName() + " has appeared.");
-		System.out.println(monster.getDescription());
+		player.resetHitPoints();
+		currentMonster.resetHitPoints();
 		
+		// Introduce the monster to fight
+		System.out.println("\nYou have encountered the " + currentMonster.getName() + "!");
+		System.out.println(currentMonster.getDescription());
+		System.out.println("\nPrepare to fight!");
+
+		//TODO Fix continue
+		System.out.println("\nContinue...");
+		userInput.nextLine();
+
 		for (int i = 0; i < 5; i++)
 		{
-			System.out.println("\nRound " + (i + 1) + " of 5.");
+			System.out.println("\nRound " + (i + 1) + " of 5...");
 			// Generate hit value and compare
-			int mHitValue = (int)(Math.random() * 101);
-			int pHitValue = (int)(Math.random() * 101);
-			
-			// Wait x000 seconds
-			try
-			{
-				Thread.sleep(2000);
-			}
-			catch(InterruptedException e)
-			{
-			}
-			
+			int mHitValue = (int) (Math.random() * 101);
+			int pHitValue = (int) (Math.random() * 101);
+
+
 			// Player turn per round
-			if(pHitValue < player.getCTH())
+			if (pHitValue < player.getCTH())
 			{
-				System.out.println("\nYou attack the " + monster.getName() + " and HIT.");
+				System.out.println("\nYou attack the " + currentMonster.getName() + " and HIT.");
 				player.plusHitPoints();
 			}
 			else
 			{
-				System.out.println("\nYou attack the " + monster.getName() + " and MISS.");
+				System.out.println("\nYou attack the " + currentMonster.getName() + " and MISS.");
 			}
-			
+
 			// Monster turn per round
-			if(mHitValue < monster.getCTH())
+			if (mHitValue < currentMonster.getCTH())
 			{
-				System.out.println("\nThe " + monster.getName() + " attacks you and HITS.");
-				monster.plusHitPoints();
+				System.out.println("The " + currentMonster.getName() + " attacks you and HITS.");
+				currentMonster.plusHitPoints();
 			}
 			else
 			{
-				System.out.println("\nThe " + monster.getName() + " and MISSES.");
+				System.out.println("The " + currentMonster.getName() + " attacks you and MISSES.");
 			}
-			
+
 			// Wait x000 seconds
 			try
 			{
 				Thread.sleep(2000);
 			}
-			catch(InterruptedException e)
+			catch (InterruptedException e)
 			{
 			}
 		}
-		
+
+		System.out.println("\n" + this.player.getName() + " hit " + this.player.getHitPoints() + " times.");
+		System.out.println(currentMonster.getName() + " hit " + currentMonster.getHitPoints() + " times.");
+
+
 		// Evaluate fight outcome
-		if(player.getHitPoints() >= monster.getHitPoints())
+		if (player.getHitPoints() >= currentMonster.getHitPoints())
 		{
-			System.out.println("\nYou have killed the " + monster.getName());
-			System.out.println("As you consume him you can feel his knowledge coursing through your veins.");
-			System.out.println("A voice in the back of your mind whispers: " + monster.getClue());
-			player.getInventory().addClue(monster.getClue());
+			System.out.println("\nYou have killed the " + currentMonster.getName() + "!");
+			System.out.println(this.player.getLives() + " lives remaining.");
+
+			//TODO Fix continue
+			System.out.println("\nContinue...");
+			userInput.nextLine();
+
+			System.out.println("\nYour body is driven to consume the brains of your victim and you feel their knowledge course through your veins...");
+
+			if (currentMonster.getClue().length() > 0)
+			{
+				System.out.println("You can hear the " + currentMonster.getName() + " in the back of your mind...");
+				for (int i = 0; i < currentMonster.getClue().length() + 4; i++)
+				{
+					System.out.print("~");
+				}
+				System.out.println("\n| " + currentMonster.getClue() + " |");
+				for (int i = 0; i < currentMonster.getClue().length() + 4; i++)
+				{
+					System.out.print("~");
+				}
+				System.out.print("\n");
+				player.getInventory().addClue(currentMonster.getClue());
+			}
+			else
+			{
+				System.out.println("Their memories become your own.");
+			}
 		}
 		else
 		{
-			System.out.println("The " + monster.getName() + " has injured you gravely and you loose 1 life.");
+			System.out.println("\nThe " + currentMonster.getName() + " has injured you gravely and you loose 1 life.");
 			player.minusLife();
+			System.out.println("You have " + this.player.getLives() + " lives remaining.");
+
+			this.checkGameOver();
 		}
+		
+
 	}
-	
-	/** 
-	 * Method: getPlayerLives
-	 * <description>
-	 * Note:
-	 *  
-	 * @return
-	 */
-	public int getPlayerLives()
-	{
-		return this.player.getLives();
-	}
-	
+
 	/** 
 	 * Method: getGameOver
 	 * <description>
@@ -624,6 +723,74 @@ public class Game
 	{
 		return this.gameOver;
 	}
+	
+	/** 
+	 * Method: setMonster
+	 * <description>
+	 * Note:
+	 *  
+	 * @param monster
+	 */
+	public void setMonster(Monster monster)
+	{
+		this.currentMonster = monster;
+	}
+	
+	/** 
+	 * Method: getPlayer
+	 * <description>
+	 * Note:
+	 *  
+	 * @return
+	 */
+	public Player getPlayer()
+	{
+		return this.player;
+	}
+	
+	/** 
+	 * Method: getCurrentRoom
+	 * <description>
+	 * Note:
+	 *  
+	 * @return
+	 */
+	public Room getCurrentRoom()
+	{
+		return this.currentRoom;
+	}
+	
+	/** 
+	 * Method: getMonsterList
+	 * <description>
+	 * Note:
+	 *  
+	 * @return
+	 */
+	public MonsterList getMonsterList()
+	{
+		return this.mL;
+	}
+	
+	/** 
+	 * Method: checkGameOver
+	 * <description>
+	 * Note:
+	 *  
+	 */
+	public boolean checkGameOver()
+	{
+		if(this.player.getLives() <= 0)
+		{
+			this.gameOver = true;
+		}
+		return this.gameOver;
+	}
+	
+	public Scanner getScanner()
+	{
+		return userInput;
+	}
 
 	/** 
 	 * Method: main
@@ -634,16 +801,77 @@ public class Game
 	 */
 	public static void main(String[] args)
 	{
+		// Get things going
 		Game game = new Game();
 		game.startMainMenu();
-		
-		while(!game.getGameOver())
+
+		while (!game.getGameOver())
 		{
+			game.saveState();
 			game.moveToRoom();
-			game.startEncounter();
+			if(game.getCurrentRoom().getName().equals("Security"))
+			{
+				game.setMonster(game.getMonsterList().getMonster("Evil Scientist"));
+				game.fightMonster();
+			}
+			else if(game.getCurrentRoom().getName().equals("Containment"))
+			{
+				while(!game.checkGameOver())
+				{
+					System.out.println("\nYou open the cabinet and see multiple vials. Each vial is different.");
+					System.out.println("Which one will you take?");
+					System.out.println("1. Green crystals");
+					System.out.println("2. Green paste");
+					System.out.println("3. Red syrup");
+					System.out.println("4. Red crystals");
+					System.out.println("5. Yellow paste");
+					System.out.println("6. Yellow syrup");
+					System.out.println("7. LIST ALL CLUES");
+					
+					String selection = game.getScanner().nextLine();
+					int numSelection;
+					try
+					{
+						numSelection = Integer.parseInt(selection);
+					}
+					catch(NumberFormatException e)
+					{
+						numSelection = -1;
+					}
+					
+					if(numSelection == 3)
+					{
+						//TODO finish the outro
+						System.out.println("GJ on not dying!");
+						System.exit(0);						
+					}
+					else if(numSelection == 7)
+					{
+						for (int i = 0; i < game.getPlayer().getInventory().getClueListSize(); i++)
+						{
+							System.out.println(game.getPlayer().getInventory().getClue(i));
+						}
+					}
+					else if(numSelection > 0 && numSelection < 8)
+					{
+						System.out.println("\nYou open the vial and consume its contents.");
+						System.out.println("Your body wretches in pain.");
+						game.getPlayer().minusLife();
+					}
+					else
+					{
+						System.out.println("That was not a valid selection. Choose a number 1-6.");
+					}
+					
+				}
+			}
+			else
+			{
+				game.startEncounter();
+			}
 		}
-		System.out.println("Your body falls to the ground, too weak to support itself. You lay motionless, undead and eternally tormented as the disease ravages your body and your flesh decays.");
-		
+		System.out.println("\nYour body falls to the ground, too weak to support itself. You lay motionless, undead and eternally tormented as the disease ravages your body and your flesh decays.");
+		System.out.println("\n~Thank you for playing ZombieMan!~");
 	}
 
 }

@@ -1,6 +1,7 @@
 package src;
 
 
+
 import java.util.ArrayList;
 
 /**
@@ -52,10 +53,10 @@ public class PuzzleList
 		questionList.add("How did Steve Rogers become Captain America? ");
 		answer1.add("Blasted with Gamma Rays ");
 		answer2.add("Came for foreign Planet ");
-		answer3.add("Injected with the Super Hero Serum");
+		answer3.add("Injected with Serum");
 		correctAnswer.add(3);
 
-		questionList.add("The Hindenburg was filled with this gas? ");
+		questionList.add("The Hindenburg was filled with which gas? ");
 		answer1.add("Helium ");
 		answer2.add("Argon ");
 		answer3.add("Hydrogen ");
@@ -79,11 +80,11 @@ public class PuzzleList
 		answer3.add("Really a management problem");
 		correctAnswer.add(1);
 
-		questionList.add("Vaccine Puzzle");
-		answer1.add("question 1 answer");
-		answer2.add("question 2 answer");
-		answer3.add("question 3 answer");
-		correctAnswer.add(2);
+//		questionList.add("Vaccine Puzzle");
+//		answer1.add("question 1 answer");
+//		answer2.add("question 2 answer");
+//		answer3.add("question 3 answer");
+//		correctAnswer.add(2);
 
 		numberofquestions = questionList.size();
 	}
@@ -113,9 +114,9 @@ public class PuzzleList
 		return answer3.get(num);
 	}
 
-	public int correctAnswer(int correctAnswer)
+	public int correctAnswer(int num)
 	{
-		return correctAnswer;
+		return this.correctAnswer.get(num);
 	}
 
 }

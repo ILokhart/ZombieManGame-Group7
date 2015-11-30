@@ -1,5 +1,6 @@
 package src;
 
+
 /**
  * Class: Monster
  * 
@@ -62,5 +63,10 @@ public class Monster
 	public void plusHitPoints()
 	{
 		this.hitPoints += 1;
+	}
+	
+	public void resetHitPoints()
+	{
+		this.hitPoints = 0;
 	}
 }
