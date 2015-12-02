@@ -2,6 +2,7 @@ package src;
 
 
 
+
 import java.util.ArrayList;
 
 /**
@@ -23,8 +24,6 @@ import java.util.ArrayList;
 public class PuzzleList
 {
 
-	@SuppressWarnings("unused")
-	private int numberofquestions;
 	private ArrayList<String> questionList;
 	private ArrayList<String> answer1;
 	private ArrayList<String> answer2;
@@ -79,14 +78,6 @@ public class PuzzleList
 		answer2.add("Really, a physics problem");
 		answer3.add("Really a management problem");
 		correctAnswer.add(1);
-
-//		questionList.add("Vaccine Puzzle");
-//		answer1.add("question 1 answer");
-//		answer2.add("question 2 answer");
-//		answer3.add("question 3 answer");
-//		correctAnswer.add(2);
-
-		numberofquestions = questionList.size();
 	}
 
 	public int getNumberOfQuestion()

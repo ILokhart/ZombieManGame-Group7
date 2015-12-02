@@ -1,5 +1,6 @@
 package src;
 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -38,7 +39,6 @@ public class Game
 	private boolean passMainMenu = false;
 	private boolean gameOver = false;
 	private Scanner userInput = new Scanner(System.in);
-	String trashString;
 
 	/** 
 	 * Method: startMainMenu
@@ -90,10 +90,19 @@ public class Game
 			System.out.println("3. Exit");
 
 			// Get menu selection from the user
-			String selection = userInput.nextLine();
+			int selection;
+			try
+			{
+				selection = userInput.nextInt();
+				userInput.nextLine();
+			}
+			catch(InputMismatchException e)
+			{
+				selection = -1;
+			}
 
 			// If 1, start a new game
-			if (selection.equals("1"))
+			if (selection == 1)
 			{
 				// Ask the user for their name
 				System.out.println("\nPlease enter your name:");
@@ -111,12 +120,12 @@ public class Game
 				}
 			}
 			// If 2, load an existing game
-			else if (selection.equals("2"))
+			else if (selection == 2)
 			{
 				this.loadState();
 			}
 			// If 3, exit the program
-			else if (selection.equals("3"))
+			else if (selection == 3)
 			{
 				System.out.println("\nThank you for playing ZombieMan!");
 				System.exit(0);
@@ -262,6 +271,7 @@ public class Game
 		try
 		{
 			selection = userInput.nextInt();
+			userInput.nextLine();
 		}
 		catch (InputMismatchException e)
 		{
@@ -281,7 +291,8 @@ public class Game
 				this.player = (Player) inputStream.readObject();
 				this.currentRoom = this.player.getSavedRoom();
 				System.out.print("Done.\n");
-				System.out.println("\n" + this.currentRoom.getDescription());
+				System.out.println("\nCurrent location: " + this.currentRoom.getName());
+				System.out.println(this.currentRoom.getDescription());
 				passMainMenu = true;
 			}
 			catch (IOException e)
@@ -401,6 +412,8 @@ public class Game
 					try
 					{
 						roomNumber = userInput.nextInt();
+						//TODO Tag CR clear
+						userInput.nextLine();
 					}
 					catch(InputMismatchException e)
 					{
@@ -415,7 +428,8 @@ public class Game
 					if (roomNumber <= currentRoom.getNextRoom().size() && roomNumber > 0)
 					{
 						this.currentRoom = rL.getRoom(currentRoom.getNextRoom().get(roomNumber - 1));
-						System.out.println("\n" + currentRoom.getDescription());
+						System.out.println("\nCurrent Location: " + this.currentRoom.getName());
+						System.out.println(currentRoom.getDescription());
 						moved = true;
 					}
 				}
@@ -480,7 +494,7 @@ public class Game
 				System.out.println("FIGHT or FLEE?");
 				
 				// Determine if the user would rather fight or flee the encounter
-				String selection = userInput.next();
+				String selection = userInput.nextLine();
 				if(selection.equalsIgnoreCase("fight"))
 				{
 					initEncounter = true;
@@ -514,7 +528,7 @@ public class Game
 				System.out.println("SEARCH or IGNORE?");
 				
 				// Determine if the user would rather fight or flee the encounter
-				String selection = userInput.next();
+				String selection = userInput.nextLine();
 				if(selection.equalsIgnoreCase("search"))
 				{
 					initEncounter = true;
@@ -524,18 +538,15 @@ public class Game
 				{
 					initEncounter = true;
 					System.out.println("\nYou quietly pass through the area, eyes forward...");
-					trashString = userInput.nextLine(); //Couldn't solve carriage return in scanner buffer. This removes it seamlessly durring gameplay
 					
 				}
 				else if(selection.equalsIgnoreCase("help"))
 				{
 					System.out.println("\nYou must type SEARCH or IGNORE to continue.");
-					trashString = userInput.nextLine(); //Couldn't solve carriage return in scanner buffer. This removes it seamlessly durring gameplay
 				}
 				else
 				{
 					System.out.println("\nInvalid input.");
-					trashString = userInput.nextLine(); //Couldn't solve carriage return in scanner buffer. This removes it seamlessly durring gameplay
 				}
 			}
 		}
@@ -564,19 +575,15 @@ public class Game
 		System.out.println("\nChoose wisely: ");
 
 		// Get user choice and evaluate
-		trashString = userInput.nextLine(); //Couldn't solve carriage return in scanner buffer. This removes it seamlessly durring gameplay
 		int puzzleNum;
 		try
 		{
-//			puzzleNum = Integer.parseInt(puzzleChoice);
 			puzzleNum = userInput.nextInt();
+			//TODO tag CR clear
+			userInput.nextLine();
 
 		}
 		catch(InputMismatchException e)
-		{
-			puzzleNum = -1;
-		}
-		catch (NumberFormatException e)
 		{
 			puzzleNum = -1;
 		}
@@ -588,19 +595,16 @@ public class Game
 			System.out.println("You feel more powerful.");
 			System.out.println("(chance to hit +10%)");
 			player.getInventory().addSolvedPuzzles();
-			trashString = userInput.nextLine(); //Couldn't solve carriage return in scanner buffer. This removes it seamlessly durring gameplay
 		}
 		else if (puzzleNum > 0 && puzzleNum < 4)
 		{
 			System.out.println("\nYou chose poorly.");
 			System.out.println("The question disolves into the air around you.");
-			trashString = userInput.nextLine(); //Couldn't solve carriage return in scanner buffer. This removes it seamlessly durring gameplay
 		}
 		else
 		{
 			System.out.println("\nYour response is unclear.");
 			System.out.println("The question disolves into the air around you.");
-			trashString = userInput.nextLine(); //Couldn't solve carriage return in scanner buffer. This removes it seamlessly durring gameplay
 		}
 	}
 
@@ -618,7 +622,10 @@ public class Game
 		// Introduce the monster to fight
 		System.out.println("\nYou have encountered the " + currentMonster.getName() + "!");
 		System.out.println(currentMonster.getDescription());
-		System.out.println("\nPrepare to fight!");
+		System.out.println("\n" + this.player.getName() + " chance to hit: " + this.player.getCTH() + "%");
+		System.out.println(this.currentMonster.getName() + " chance to hit: " + this.currentMonster.getCTH() + "%");
+		System.out.println("Prepare to fight!");
+
 
 		//TODO Fix continue
 		System.out.println("\nContinue...");
@@ -687,7 +694,7 @@ public class Game
 				{
 					System.out.print("~");
 				}
-				System.out.println("\n| " + currentMonster.getClue() + " |");
+				System.out.println("\n  " + currentMonster.getClue());
 				for (int i = 0; i < currentMonster.getClue().length() + 4; i++)
 				{
 					System.out.print("~");
