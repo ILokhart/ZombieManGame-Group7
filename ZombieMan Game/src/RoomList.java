@@ -46,7 +46,7 @@ public class RoomList
 		// Downtown is left branch from Hospital
 		ArrayList<String> nextRoom2 = new ArrayList<String>();
 		nextRoom2.add("Warehouse");
-		nextRoom2.add("Office");
+		nextRoom2.add("Office Building");
 		nextRoom2.add("CDC");
 		rL.add(new Room("Downtown", "You stand at the top of a hill on the edge of town. From here you can see the silhouettes of several buildings against the dimly lit horizon.",
 				nextRoom2, "Hospital", 70, noLocalMonster, "Normally you could hear the bustle of the city from here, but now... silence."));
@@ -68,19 +68,19 @@ public class RoomList
 				"Wrestler's Assistant", emptyRoom));
 		// Three rooms from Warehouse
 		rL.add(new Room("Storage", "You you enter a smaller storage area filled with various business supplies.", noNextRoom, "Warehouse", 40, "Wrestler's Assistant", emptyRoom));
-		rL.add(new Room("Offices", "You enter", noNextRoom, "Warehouse", 0, "Wrestler", emptyRoom));
-		rL.add(new Room("Dock", "You enter", noNextRoom, "Warehouse", 40, "Wrestler's Assistant", emptyRoom));
+		rL.add(new Room("Offices", "You enter a filthy office area filled with cubicles. It stinks like burnt coffee in here.", noNextRoom, "Warehouse", 0, "Wrestler", emptyRoom));
+		rL.add(new Room("Dock", "You enter the dock area. The sound of water spashing underneath you is strangely comforting.", noNextRoom, "Warehouse", 40, "Wrestler's Assistant", emptyRoom));
 		
 		// Work is path 2 from Downtown
 		ArrayList<String> nextRoom5 = new ArrayList<String>();
 		nextRoom5.add("Your Office");
 		nextRoom5.add("Data Center");
 		nextRoom5.add("Managers Office");
-		rL.add(new Room("Work", "You approach your old place of work, a tall office building surrounded by smaller local businesses.", nextRoom5, "Downtown", 60, "Manager's Assistant", emptyRoom));
+		rL.add(new Room("Office Building", "You approach your old place of work, a tall office building surrounded by smaller local businesses.", nextRoom5, "Downtown", 60, "Manager's Assistant", emptyRoom));
 		// Three rooms from Work
-		rL.add(new Room("Your Office", "You enter your old office. You recognize the name plate and a photo of your family.", noNextRoom, "Work", 70, noLocalMonster, emptyRoom));
-		rL.add(new Room("Data Center", "You enter the data center. Tall rows of computer cabinets wind around the room, hard drives clicking.", noNextRoom, "Work", 40, "Manager's Assistant", emptyRoom));
-		rL.add(new Room("Managers Office", "You enter your old bosses office.", noNextRoom, "Work", 0, "Manager", emptyRoom));
+		rL.add(new Room("Your Office", "You enter your old office. You recognize the name plate and a photo of your family.", noNextRoom, "Office Building", 70, noLocalMonster, emptyRoom));
+		rL.add(new Room("Data Center", "You enter the data center. Tall rows of computer cabinets wind around the room, hard drives clicking.", noNextRoom, "Office Building", 40, "Manager's Assistant", emptyRoom));
+		rL.add(new Room("Managers Office", "You enter your old bosses office.", noNextRoom, "Office Building", 0, "Manager", emptyRoom));
 		
 		// CDC is path 3 from Downtoan
 		ArrayList<String> nextRoom6 = new ArrayList<String>();
@@ -93,7 +93,7 @@ public class RoomList
 		rL.add(new Room("Pathology", "You enter the pathology lab. All of the animals are missing or dead but you notice an active terminal. Someone must have been here recently.", noNextRoom, "CDC", 0, "Pathologist", emptyRoom));
 		ArrayList<String> nextRoom7 = new ArrayList<String>();
 		nextRoom7.add("Basement");
-		rL.add(new Room("Restricted Lab", "You enter a restricted lab through a decontamination unit that was left open. A bright red door in the back of the room catches your eye, above it: AUTHORIZED PERSONEL ONLY.", nextRoom7, "CDC", 0, "Lab Assistant", emptyRoom));
+		rL.add(new Room("Restricted Lab", "You enter a restricted lab through a decontamination unit that was left open. A bright red door in the back of the room leads to the basement, above it: AUTHORIZED PERSONEL ONLY.", nextRoom7, "CDC", 0, "Lab Assistant", emptyRoom));
 		// End game branch from Lab
 		ArrayList<String> nextRoom8 = new ArrayList<String>();
 		nextRoom8.add("Security");
@@ -136,6 +136,7 @@ public class RoomList
 		rL.add(new Room("Drug Room", "You enter the drug storage area. Maybe one of the bottles could help you if you knew what any of them were.", noNextRoom, "Pharmacy", 30, "Assistant Pharmacist", emptyRoom));
 		rL.add(new Room("Pharmacists Office", "You enter the pharmacists office and see a body resting in the chair facing away from you.", noNextRoom, "Pharmacy", 0, "Pharmacist", emptyRoom));
 		rL.add(new Room("Record Room", "You enter patient record room. It is lined with shelves containing countless manila folders.", noNextRoom, "Pharmacy", 30, "Nurse", emptyRoom));
+		rL.add(new Room("ERROR ROOM", "Welcome to your worst presentation nightmare!", noNextRoom, "Hospital", 70, noLocalMonster, emptyRoom));
 		
 		
 		

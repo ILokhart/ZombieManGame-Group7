@@ -75,8 +75,8 @@ public class PuzzleList
 
 		questionList.add("Knowledge is power. Time is money. Power = work over time. Therefore what? ");
 		answer1.add("The less you know the more money you get");
-		answer2.add("Really, a physics problem");
-		answer3.add("Really a management problem");
+		answer2.add("Really, this is a physics problem");
+		answer3.add("Really, this is a management problem");
 		correctAnswer.add(1);
 	}
 

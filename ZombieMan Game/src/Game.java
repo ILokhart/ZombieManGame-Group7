@@ -218,7 +218,6 @@ public class Game
 		System.out.println("You sit up and notice a doctor on the floor, wearing a blood soaked white coat, reaching desperately towards the room door.");
 		System.out.println("Some unknown, dark instinct consumes your body as you lunge onto his back and tear at his flesh...");
 
-		//TODO Fix continue
 		System.out.println("\nPress enter to continue...");
 		userInput.nextLine();
 
@@ -412,7 +411,6 @@ public class Game
 					try
 					{
 						roomNumber = userInput.nextInt();
-						//TODO Tag CR clear
 						userInput.nextLine();
 					}
 					catch(InputMismatchException e)
@@ -429,7 +427,7 @@ public class Game
 					{
 						this.currentRoom = rL.getRoom(currentRoom.getNextRoom().get(roomNumber - 1));
 						System.out.println("\nCurrent Location: " + this.currentRoom.getName());
-						System.out.println(currentRoom.getDescription());
+						System.out.println(this.currentRoom.getDescription());
 						moved = true;
 					}
 				}
@@ -446,7 +444,8 @@ public class Game
 				{
 					currentRoom = rL.getRoom(currentRoom.getPreviousRoom());
 					currentMonster = mL.getMonster(currentRoom.getLocalMonster());
-					System.out.println("\n" + currentRoom.getDescription());
+					System.out.println("\nCurrent Location: " + this.currentRoom.getName());
+					System.out.println(this.currentRoom.getDescription());
 					moved = true;
 				}
 			}
@@ -479,10 +478,9 @@ public class Game
 		// Generate a random encounter chance betwen 0 and 100 and apply to encounter
 		boolean initEncounter = false;
 		int encounterChance = (int) (Math.random() * 100);
-		System.out.println("Encounter chance: " + encounterChance);
 		if (encounterChance >= 70)
 		{
-			System.out.println("\n" + currentRoom.getEmptyRoom());
+			System.out.println(currentRoom.getEmptyRoom());
 		}
 		else if (encounterChance >= currentRoom.getEncounterChance())
 		{
@@ -503,7 +501,17 @@ public class Game
 				else if(selection.equalsIgnoreCase("flee"))
 				{
 					initEncounter = true;
-					System.out.println("\nYou quietly shuffle your body into the shadows....");
+					System.out.println("\nYou quietly shuffle your body into the shadows and retreat....");
+					if (currentRoom.getPreviousRoom().length() == 0)
+					{
+						System.out.println("\nThere doesn't seem to be anything in that direction.");
+					}
+					else
+					{
+						currentRoom = rL.getRoom(currentRoom.getPreviousRoom());
+						currentMonster = mL.getMonster(currentRoom.getLocalMonster());
+						System.out.println("\n" + currentRoom.getDescription());
+					}
 				}
 				else if(selection.equalsIgnoreCase("help"))
 				{
@@ -539,6 +547,7 @@ public class Game
 					initEncounter = true;
 					System.out.println("\nYou quietly pass through the area, eyes forward...");
 					
+					
 				}
 				else if(selection.equalsIgnoreCase("help"))
 				{
@@ -560,12 +569,14 @@ public class Game
 	 */
 	public void solvePuzzle()
 	{
+		System.out.println("\n? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?");
 		// Puzzle intro
 		System.out.println("\nGlyphs appear out of thin air.");
 		System.out.println("They float in front you and begin to form a question.");
 
 		// Generate int to pull a random puzzle
 		int questionNum = (int) (Math.random() * pL.getNumberOfQuestion());
+	
 
 		// Display question and answers
 		System.out.println("\n" + pL.getQuestion(questionNum));
@@ -574,12 +585,13 @@ public class Game
 		System.out.println("3. " + pL.getAnswer3(questionNum));
 		System.out.println("\nChoose wisely: ");
 
+		System.out.println("\n? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?");
+
 		// Get user choice and evaluate
 		int puzzleNum;
 		try
 		{
 			puzzleNum = userInput.nextInt();
-			//TODO tag CR clear
 			userInput.nextLine();
 
 		}
@@ -593,7 +605,7 @@ public class Game
 			System.out.println("\nYou chose wisely.");
 			System.out.println("\nThe question begins to disolve and seeps into your flesh.");
 			System.out.println("You feel more powerful.");
-			System.out.println("(chance to hit +10%)");
+			System.out.println("Chance to hit increases by 10%");
 			player.getInventory().addSolvedPuzzles();
 		}
 		else if (puzzleNum > 0 && puzzleNum < 4)
@@ -626,10 +638,10 @@ public class Game
 		System.out.println(this.currentMonster.getName() + " chance to hit: " + this.currentMonster.getCTH() + "%");
 		System.out.println("Prepare to fight!");
 
-
-		//TODO Fix continue
 		System.out.println("\nContinue...");
 		userInput.nextLine();
+		
+		System.out.println("\n! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! !");
 
 		for (int i = 0; i < 5; i++)
 		{
@@ -674,14 +686,14 @@ public class Game
 		System.out.println("\n" + this.player.getName() + " hit " + this.player.getHitPoints() + " times.");
 		System.out.println(currentMonster.getName() + " hit " + currentMonster.getHitPoints() + " times.");
 
-
+		System.out.println("\n! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! !");
+		
 		// Evaluate fight outcome
 		if (player.getHitPoints() >= currentMonster.getHitPoints())
 		{
 			System.out.println("\nYou have killed the " + currentMonster.getName() + "!");
 			System.out.println(this.player.getLives() + " lives remaining.");
 
-			//TODO Fix continue
 			System.out.println("\nContinue...");
 			userInput.nextLine();
 
@@ -848,9 +860,11 @@ public class Game
 					
 					if(numSelection == 3)
 					{
-						//TODO finish the outro
-						System.out.println("GJ on not dying!");
-						System.exit(0);						
+						System.out.println("\nYou open the vial and drink its entire contents. A wave of warmth washes over your body and you can feel your mind begin to clear.");
+						System.out.println("Congratulations on finding the cure ZombieMan!");
+						System.out.println("\n~Thank you for playing ZombieMan!~");
+
+						System.exit(0);
 					}
 					else if(numSelection == 7)
 					{
@@ -864,6 +878,7 @@ public class Game
 						System.out.println("\nYou open the vial and consume its contents.");
 						System.out.println("Your body wretches in pain.");
 						game.getPlayer().minusLife();
+						System.out.println("You have " + game.getPlayer().getLives() + " lives remaining.");
 					}
 					else
 					{

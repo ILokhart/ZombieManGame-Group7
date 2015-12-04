@@ -40,7 +40,7 @@ public class MonsterList
 		mL.add(new Monster("Pathologist", "...there is a cure...the WRESTLER helped...STAY OUT OF THE BASEMENT!!!...", "The nervous young man inches away from you as you move closer towards him.", 20));
 		mL.add(new Monster("Lab Assistant", noClue, "A tall, thin figure wearing a lab coat and glasses. He stands his ground.", 30));
 		mL.add(new Monster("Wrestler", "...liquid...tastes awful...SURVIVALIST took it...", "If he were wearing plaid you would mistake him for a lumberjack. This will be a challenge", 50));
-		mL.add(new Monster("Wrestler's Assistant", noClue, "This Monster is Secrectroy for the Westler", 20));
+		mL.add(new Monster("Wrestler's Assistant", noClue, "This Monster is a secretary to the Westler", 20));
 		mL.add(new Monster("Survivalist", "...the cure...he took it to the basement...CDC...HE'S GONE MAD!!!...", "The athletic young woman has piled equipment on her back. She weilds a camping spade.", 50));
 		mL.add(new Monster("Evil Scientist", noClue, "His twisted body and black eyes stare straight into your soul. There is no way around him.", 70));
         mL.add(new Monster("Manager", "...my family...get the children out... RUN!!!...", "Your old boss. Under different circumstances you'd give him a piece of YOUR mind.", 40));
